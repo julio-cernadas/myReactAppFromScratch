@@ -1,66 +1,101 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-// const numbers = [1, 2, 3, 4, 5];
-// const listItems = numbers.map((number) =>
-//     <li>{number}</li>
-// );
 
-// ReactDOM.render(
-//     <ul>{listItems}</ul>,
-//     document.getElementById('root')
-// );
-
-// function NumberList(props) {
-//     const numbers = props.numbers;
-//     const listItems = numbers.map((number) =>
-//         <li key={number.toString()}>
-//             {number}
-//         </li>
-//     );
-//     console.log(listItems);
-//     return (
-//         <ul>{listItems}</ul>
-//     );
-// }
-
-// const numbers = [1, 2, 3, 4, 5];
-// ReactDOM.render(
-//     <NumberList numbers={numbers} />,
-//     document.getElementById('root')
-// );
-
-
-function Blog(props) {
-    const sidebar = (
-        <ul>
-            {props.posts.map((post) =>
-                <li key={post.id}>
-                    {post.title}
-                </li>
-            )}
-        </ul>
-    );
-    const content = props.posts.map((post) =>
-        <div key={post.id}>
-            <h3>{post.title}</h3>
-            <p>{post.content}</p>
-        </div>
-    );
+function FancyBorder(props) {
+    console.log(props.children);
     return (
-        <div>
-            {sidebar}
-            <hr />
-            {content}
+        <div className={'FancyBorder FancyBorder-' + props.color}>
+            {props.children}
         </div>
     );
 }
 
-const posts = [
-    { id: 1, title: 'Hello World', content: 'Welcome to learning React!' },
-    { id: 2, title: 'Installation', content: 'You can install React from npm.' }
-];
+function WelcomeDialog() {
+    return (
+        <FancyBorder color="blue">
+            <h1 className="Dialog-title">
+                Welcome
+            </h1>
+            <p className="Dialog-message">
+                Thank you for visiting our spacecraft!
+            </p>
+        </FancyBorder>
+    );
+}
+
+/* -------------------------------------------------------------------------- */
+function SplitPane(props) {
+    return (
+        <div className="SplitPane">
+            <div className="SplitPane-left">
+                {props.left}
+            </div>
+            <div className="SplitPane-right">
+                {props.right}
+            </div>
+        </div>
+    );
+}
+
+function App() {
+    return (
+        <SplitPane
+            left={
+                <Contacts />
+            }
+            right={
+                <Chat />
+            } />
+    );
+}
+
+/* -------------------------------------------------------------------------- */
+function Dialog(props) {
+    return (
+        <FancyBorder color="blue">
+            <h1 className="Dialog-title">
+                {props.title}
+            </h1>
+            <p className="Dialog-message">
+                {props.message}
+            </p>
+            {props.children}
+        </FancyBorder>
+    );
+}
+
+class SignUpDialog extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSignUp = this.handleSignUp.bind(this);
+        this.state = { login: '' };
+    }
+
+    render() {
+        return (
+            <Dialog title="Mars Exploration Program"
+                message="How should we refer to you?">
+                <input value={this.state.login}
+                    onChange={this.handleChange} />
+                <button onClick={this.handleSignUp}>
+                    Sign Me Up!
+          </button>
+            </Dialog>
+        );
+    }
+
+    handleChange(e) {
+        this.setState({ login: e.target.value });
+    }
+
+    handleSignUp() {
+        alert(`Welcome aboard, ${this.state.login}!`);
+    }
+}
+
 ReactDOM.render(
-    <Blog posts={posts} />,
+    <SignUpDialog />,
     document.getElementById('root')
 );
